@@ -1,14 +1,14 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import bcript from 'bcrypt';
 import mongoose from 'mongoose';
 import { registerValidation } from './validations/auth.js';
 import { validationResult } from 'express-validator';
 import UserModel from './models/User.js';
+console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 
 mongoose
   .connect(
-    'mongodb+srv://admin:password@cluster0.5dkt98k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+    `mongodb+srv://admin:password@cluster0.5dkt98k.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then(() => {
     console.log('Database connected successfully');
@@ -38,9 +38,9 @@ app.post('/auth/register', registerValidation, async (req, res) => {
     passwordHash,
   });
 
-  res.json({
-    success: true,
-  });
+  const user = await doc.save();
+
+  res.json(user);
 });
 
 app.listen(4444, (err) => {
