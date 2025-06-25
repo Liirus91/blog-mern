@@ -5,6 +5,7 @@ import { registerValidation } from './validations/auth.js';
 import { validationResult } from 'express-validator';
 import UserModel from './models/User.js';
 import jwt from 'jsonwebtoken';
+import checkAuth from './utils/checkAuth.js';
 
 mongoose
   .connect(
@@ -81,6 +82,23 @@ app.post('/auth/register', registerValidation, async (req, res) => {
     res.json({ ...userData, token });
   } catch (error) {
     console.error('Registration error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.get('/auth/me', checkAuth, async (req, res) => {
+  try {
+    const user = await UserModel.findById(decoded._id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const { passwordHash, ...userData } = user._doc;
+
+    res.json(userData);
+  } catch (error) {
+    console.error('Get user error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
