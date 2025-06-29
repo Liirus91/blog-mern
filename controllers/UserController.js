@@ -32,7 +32,7 @@ export const register = async (req, res) => {
 
     res.json({ ...userData, token });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Registration error: ', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
 
     res.json({ ...userData, token });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Login error: ', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -79,7 +79,7 @@ export const getMe = async (_req, res) => {
 
     res.json(userData);
   } catch (error) {
-    console.error('Get user error:', error);
+    console.error('Get user error: ', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
