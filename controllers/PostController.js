@@ -42,6 +42,29 @@ export const getOne = async (_req, res) => {
   }
 };
 
+export const remove = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await PostModel.findOneAndDelete({ _id: id }, (err, doc) => {
+      if (err) {
+        console.error('Error deleting post: ', err);
+        return res.status(500).json({ message: 'Internal server error' });
+      }
+      if (!doc) {
+        return res.status(404).json({ message: 'Post not found' });
+      }
+
+      res.json({
+        success: true,
+        message: 'Post deleted successfully',
+      });
+    });
+  } catch (error) {
+    console.error('Error deleting post: ', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 export const create = async (req, res) => {
   try {
     const { title, text, tags, imageUrl } = req.body;
