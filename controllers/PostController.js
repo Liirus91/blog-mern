@@ -85,3 +85,29 @@ export const create = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const update = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, text, tags, imageUrl } = req.body;
+
+    await PostModel.updateOne(
+      { _id: id },
+      {
+        title,
+        text,
+        tags,
+        imageUrl,
+        user: req.userId,
+      }
+    );
+    const updatedPost = await PostModel.findById(id).populate('user').exec();
+    if (!updatedPost) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    res.json(updatedPost);
+  } catch (error) {
+    console.error('Error updating post: ', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
